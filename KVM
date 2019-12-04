@@ -1,0 +1,10 @@
+#!/bin/bash
+imga=/var/lib/libvirt/images
+xmla=/etc/libvirt/qemu
+while (($#));do
+qemu-img create -b $imga/.node_base.qcow2 -f qcow2 $imga/$1.img 20G &> /dev/null
+sed "s,node_base,$1," $imga/.node_base.xml > $xmla/$1.xml
+sudo virsh define $xmla/$1.xml > /dev/null
+sudo virsh start $1
+shift
+done
